@@ -9,6 +9,7 @@ $(document).ready(function() {
     $("#search-value").val("");
     //passes city name entered into seach value into function to get api for weather
     searchWeather(searchValue);
+    makeRow(searchValue);
   });
   //when you click on a li in history area it runs seachWeather function
   //no local storage yet though?
@@ -135,7 +136,7 @@ $(document).ready(function() {
       //(bodyEl).appendChild(uvEl)
       //(uvEl).appendChild(buttonEl)
       bodyEl.appendChild(uvEl);
-      uvEl.appendChild(buttonEl);
+      //uvEl.appendChild(buttonEl);
 }
 
 document.querySelector("#search-button").addEventListener("click", searchValue);
