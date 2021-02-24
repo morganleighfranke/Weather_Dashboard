@@ -1,8 +1,8 @@
 $(document).ready(function() {
   //function to save search value of city name into variable searchValue, passes city into searchWeather function 
-  
   var searchValue;
-  $("#search-button").on("click", function() {
+  $("#search-button").on("click", function(event) {
+    event.preventDefault();
     searchValue = $("#search-value").val();
 
     // clear input box
@@ -10,21 +10,27 @@ $(document).ready(function() {
     //passes city name entered into seach value into function to get api for weather
     searchWeather(searchValue);
     makeRow(searchValue);
-  });
-  //when you click on a li in history area it runs seachWeather function
-  //no local storage yet though?
-  $(".history").on("click", "li", function() {
-    searchWeather($(this).text());
+  
+    //setting the key history to the value searchValue
+    localStorage.setItem("history", (searchValue));
+    localStorage.getItem("history");
+   
+    $(".history").on("click", "li", function(event) {
+      searchWeather($(this).text());
+      
+    });
+
   });
 
   //altered so it's my own api key
   var APPKEY = "ca7c03ab6ebfee5c7d96f4deeccbecc0";
   
-  //makes rows in history ul on html for each city entered, but where is it grabbing the names from?
+  //makes rows in history ul on html for each city entered
   function makeRow(text) {
     var li = $("<li>").addClass("list-group-item list-group-item-action").text(text);
     $(".history").append(li);
   }
+
   //function to search weather and searchValue is taken from button 
   function searchWeather(searchValue) {
     $.ajax({
@@ -32,16 +38,6 @@ $(document).ready(function() {
       url: "http://api.openweathermap.org/data/2.5/weather?q=" + searchValue + "&appid=" + APPKEY + "&units=imperial",
       dataType: "json",
       success: function(data) {
-        //data has the api weather for city 
-        console.log(data);
-        // create history link for this search
-        // if (history.indexOf(searchValue) === -1) {
-        //   history.push(searchValue);
-        //   window.localStorage.setItem("history", JSON.stringify(history));
-    
-        //   makeRow(searchValue);
-        // }
-        
         // clear any old content
         $("#today").empty();
 
@@ -101,9 +97,6 @@ $(document).ready(function() {
     });
   }
 
-// var bodyEl = document.querySelector("#bodyEl");
-// var uvEl = document.querySelector("#uvEL");
-
   function getUVIndex(lat, lon) {
     $.ajax({
       type: "GET",
@@ -126,18 +119,6 @@ $(document).ready(function() {
         
         $("#today .card-body").append(uv.append(btn));
       }
-       
-      
     });
-    var bodyEl = document.createElement('div');
-      var uvEl = document.createElement('div');
-      //$("#uvEL").append(uv);
-      //$("#bodyEl").append(btn);
-      //(bodyEl).appendChild(uvEl)
-      //(uvEl).appendChild(buttonEl)
-      bodyEl.appendChild(uvEl);
-      //uvEl.appendChild(buttonEl);
 }
-
-document.querySelector("#search-button").addEventListener("click", searchValue);
 })
